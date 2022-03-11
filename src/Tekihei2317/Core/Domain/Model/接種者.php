@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Tekihei2317\Core\Domain\Model;
 
+use Tekihei2317\Core\Domain\Exception\InvalidOperationException;
+
 final class 接種者
 {
     public function __construct(
@@ -16,7 +18,7 @@ final class 接種者
     public function 予約登録(予約 $予約): self
     {
         if ($this->予約 !== null) {
-            throw new Exception('すでに予約しています');
+            throw new InvalidOperationException('すでに予約しています');
         }
 
         return new self(

@@ -7,6 +7,8 @@ namespace Tekihei2317\Core\Test\Model;
 use PHPUnit\Framework\TestCase;
 use Tekihei2317\Core\Domain\Model\予約;
 use Tekihei2317\Core\Domain\Model\接種者;
+use Tekihei2317\Core\Domain\Exception\InvalidOperationException;
+use Tekihei2317\Core\Domain\Model\接種;
 
 final class 接種者Test extends TestCase
 {
@@ -29,11 +31,25 @@ final class 接種者Test extends TestCase
      */
     public function 予約登録エラー_予約完了時に予約登録を実行()
     {
-        $this->expectException(Exception::class);
+        $this->expectException(InvalidOperationException::class);
 
         $reservation = new 予約();
         $recipient = new 接種者(1, 予約: $reservation, 接種: null);
 
-        // $recipient->予約登録($reservation);
+        $recipient->予約登録($reservation);
+    }
+
+    /**
+     * @test
+     */
+    public function 予約登録エラー_接種完了時に予約登録を実行()
+    {
+        $this->expectException(InvalidOperationException::class);
+
+        $reservation = new 予約;
+        $vaccination = new 接種;
+        $recipient = new 接種者(1, 予約: $reservation, 接種: $vaccination);
+
+        $recipient->予約登録($reservation);
     }
 }
