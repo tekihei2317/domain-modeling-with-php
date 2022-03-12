@@ -22,7 +22,7 @@ class 予約接種日Test extends TestCase
     /**
      * @test
      */
-    public function createfromstring_6日後ならエラー()
+    public function createFromString_6日後ならエラー()
     {
         $this->expectException(Preconditionexception::class);
 
@@ -32,10 +32,29 @@ class 予約接種日Test extends TestCase
     /**
      * @test
      */
-    public function createfromstring_31日後ならエラー()
+    public function createFromString_31日後ならエラー()
     {
         $this->expectException(PreconditionException::class);
 
         予約接種日::createFromString('2022-02-01', date::createFromString('2022-01-01'));
+    }
+
+    /**
+     * @test
+     * @dataProvider dataProvider_createFromString_範囲外ならエラー()
+     */
+    public function createFromString_範囲外ならエラー(string $dateString)
+    {
+        $this->expectException(PreconditionException::class);
+
+        予約接種日::createFromString($dateString, date::createFromString('2022-01-01'));
+    }
+
+    public function dataProvider_createFromString_範囲外ならエラー()
+    {
+        return [
+            '7日未満' => ['2022-01-07'],
+            '31日以上' => ['2022-02-01'],
+        ];
     }
 }
