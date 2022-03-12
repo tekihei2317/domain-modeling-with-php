@@ -8,20 +8,30 @@ use PHPUnit\Framework\TestCase;
 use Tekihei2317\Core\Domain\Model\予約;
 use Tekihei2317\Core\Domain\Model\接種者;
 use Tekihei2317\Core\Domain\Exception\InvalidOperationException;
+use Tekihei2317\Core\Domain\Model\予約接種日;
 use Tekihei2317\Core\Domain\Model\接種;
+use Tekihei2317\Core\Subdomain\Model\Date;
 
 final class 接種者Test extends TestCase
 {
+    private Date $today;
+    private 予約 $reservation;
+
+    protected function setUp(): void
+    {
+        $this->today = Date::createFromString('2022-01-01');
+        $this->reservation = new 予約(予約接種日::createFromString('2022-01-08', $this->today));
+    }
+
     /**
      * @test
      */
     public function 予約登録()
     {
         $recipient = new 接種者(1);
-        $reservation = new 予約();
 
-        $actual = $recipient->予約登録($reservation);
-        $expected = new 接種者(1, $reservation, null);
+        $actual = $recipient->予約登録($this->reservation);
+        $expected = new 接種者(1, $this->reservation, null);
 
         $this->assertEquals($expected, $actual);
     }
@@ -33,10 +43,9 @@ final class 接種者Test extends TestCase
     {
         $this->expectException(InvalidOperationException::class);
 
-        $reservation = new 予約();
-        $recipient = new 接種者(1, 予約: $reservation, 接種: null);
+        $recipient = new 接種者(1, 予約: $this->reservation, 接種: null);
 
-        $recipient->予約登録($reservation);
+        $recipient->予約登録($this->reservation);
     }
 
     /**
@@ -46,10 +55,9 @@ final class 接種者Test extends TestCase
     {
         $this->expectException(InvalidOperationException::class);
 
-        $reservation = new 予約;
         $vaccination = new 接種;
-        $recipient = new 接種者(1, 予約: $reservation, 接種: $vaccination);
+        $recipient = new 接種者(1, 予約: $this->reservation, 接種: $vaccination);
 
-        $recipient->予約登録($reservation);
+        $recipient->予約登録($this->reservation);
     }
 }
