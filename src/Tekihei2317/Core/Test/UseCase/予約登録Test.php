@@ -5,16 +5,17 @@ declare(strict_types=1);
 namespace Tekihei2317\Core\Test\UseCase;
 
 use PHPUnit\Framework\TestCase;
-use Tekihei2317\Core\Domain\Exception\PreconditionException;
 use Tekihei2317\Core\Domain\Model\予約;
+use Tekihei2317\Core\Domain\Model\接種者;
 use Tekihei2317\Core\Domain\Model\予約接種日;
 use Tekihei2317\Core\Domain\Model\接種券番号;
 use Tekihei2317\Core\Domain\Model\自治体番号;
-use Tekihei2317\Core\Domain\Model\接種者;
-use Tekihei2317\Core\Domain\Port\接種者Command;
+use Tekihei2317\Core\Domain\Model\接種ステータス;
 use Tekihei2317\Core\Domain\Port\接種者Query;
 use Tekihei2317\Core\Subdomain\Model\Date;
 use Tekihei2317\Core\UseCases\予約登録UseCase;
+use Tekihei2317\Core\Domain\Port\接種者Command;
+use Tekihei2317\Core\Domain\Exception\PreconditionException;
 
 class 予約登録Test extends TestCase
 {
@@ -58,7 +59,8 @@ class 予約登録Test extends TestCase
 
         $expected = new 接種者(
             1,
-            new 予約($reservationDate)
+            接種ステータス: 接種ステータス::予約完了,
+            予約: new 予約($reservationDate)
         );
 
         $this->assertEquals($expected, $command->接種者);
